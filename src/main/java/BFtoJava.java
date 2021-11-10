@@ -50,21 +50,32 @@ public class BFtoJava {
         );
         writer.write('\n');
         writer.flush();
+        int indent = 2;
         while (reader.hasNextLine()) {
             String line = reader.next();
             char[] array = line.toCharArray();
             for (char c : array) {
+                for (int i = 0; i < indent; i++) {
+                    writer.write('\t');
+                }
                 switch (c) {
                     case '<' -> writer.write("ptrMoveLeft();");
                     case '>' -> writer.write("ptrMoveRight();");
                     case '+' -> writer.write("incMemCell();");
                     case '-' -> writer.write("decMemCell();");
-                    case '[' -> writer.write("while (memArray[ptr] != 0) {");
-                    case ']' -> writer.write('}');
+                    case '[' -> {
+                        writer.write("while (memArray[ptr] != 0) {");
+                        indent++;
+                    }
+                    case ']' -> {
+                        writer.write('}');
+                        indent--;
+                    }
                     case '.' -> writer.write("System.out.print((char) memArray[ptr]);");
                     case ',' -> writer.write("memArray[ptr] = scanner.nextLine().charAt(0);");
                 }
                 writer.write('\n');
+                writer.flush();
             }
         }
         writer.write(
